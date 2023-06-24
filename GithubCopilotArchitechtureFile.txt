@@ -1,0 +1,2 @@
+This Full Stack Finance Tracker website has been build on MERN stack ,where user can create,update,delete the expenditure and income .
+Using Chart js ,the data has been visualised for proper understanding of expenses .
