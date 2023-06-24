@@ -153,6 +153,18 @@ router.put('/:id',async(req,res)=>{
   }
 
 
+
 })
+
+router.get("/details/:id", async (req, res) => {
+  try {
+    const post = await Product.findById(req.params.id);
+    res.status(200).json(post);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
 
 module.exports = router;

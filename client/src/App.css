@@ -53,7 +53,7 @@ button{
 .right{
     flex:4;
     background-color: rgba(95, 158, 160, 0.247);
-    overflow:hidden
+    
 }
 .toptab,.middletab{
     display: flex;
@@ -147,4 +147,23 @@ body{
     background-color:blueviolet;
     padding:0.3rem;
     color:beige;
+}
+
+.popup{
+    background-color:black;
+    color:beige;
+    height:auto;
+    width:15rem;
+    position: absolute;
+    left:50%;
+    top:10%;
+}
+
+.update{
+    margin-top:0.4rem
+}
+
+.update:hover,.delete:hover{
+    cursor:pointer;
+    background-color:rgb(77, 53, 100);
 }

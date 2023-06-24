@@ -17,8 +17,14 @@ const App = () => {
   const [incomes,setIncomes]=useState([])
   const [expenses,setExpenses]=useState([])
 const [recent,setRecent]=useState([])
+const[ open,setOpen]=useState(false)
 const [totalAmountIncome, setTotalAmountIncome] = useState(0);
 const [totalAmountExpense, setTotalAmountExpense] = useState(0);
+const[updatename,setupdatename]=useState("");
+const[updateamount,setupdateamount]=useState("");
+const[updatestatus,setupdatestatus]=useState("");
+const[updatecategory,setupdatecategory]=useState("");
+const [id,setid]=useState("");
 const [data, setData] = useState({
   datasets: [{
       data: [],
@@ -301,11 +307,53 @@ const handleDelete=async(id)=>{
 }
 
 
+const handleUpdate=async()=>{
+  try{
+ 
+  const iddata=await axios.get(`http://localhost:8000/api/Transactions/details/${id}`);
+  console.log(iddata)
+  
+  setupdatename(iddata.data.name);
+  setupdatecategory(iddata.data.category);
+  setupdateamount(iddata.data.amount);
+  setupdatestatus(iddata.data.status);
+  setOpen(true)
+  
+  }catch(err){
+
+  }
 
 
+
+
+}
+
+const handleclose=async()=>{
+  await axios.put(`http://localhost:8000/api/Transactions/${id}`,{
+    name:updatename,
+    amount:updateamount,
+    status:updatestatus,
+    category:updatecategory
+  }).then(()=>{
+    setOpen(false)
+  })
+}
 
   return (
     <div className="fullscreen">
+      {open && (<div>
+        <div className="popup">
+
+        <input type="text" placeholder="Add Item Name" className="select" value={updatename}onChange={(e)=>setupdatename(e.target.value)}/>
+          <input type="number" placeholder="Add Amount"  className="select" value={updateamount} onChange={(e)=>{setupdateamount(e.target.value);} }/>
+          <input type="text" placeholder="Category type"  className="select" value={updatecategory} onChange={(e)=>{setupdatecategory(e.target.value);} }/>
+          <input type="text" placeholder="income or expense"  className="select" value={updatestatus} onChange={(e)=>{setupdatestatus(e.target.value);} }/>
+          <button onClick={handleclose}>Close</button>
+
+          </div>
+           
+
+      </div>)}
       <div className="left">
            
           <input type="text" placeholder="Add Item Name" className="select" value={name}onChange={(e)=>setName(e.target.value)}/>
@@ -447,6 +495,7 @@ const handleDelete=async(id)=>{
                     {item.createdAt.slice(0,10)}
                    </div>
                    <div   className="delete" onClick={()=>handleDelete(item._id)} >Delete</div>
+                   <div   className="delete update" onClick={()=>{setid(item._id);handleUpdate()}} >Update</div>
                   </div>
 
 
@@ -471,6 +520,7 @@ const handleDelete=async(id)=>{
                     {item.createdAt.slice(0,10)}
                    </div>
                    <div  className="delete"onClick={()=>handleDelete(item._id)} >Delete</div>
+                   <div   className="delete update" onClick={()=>{setid(item._id);handleUpdate()}} >Update</div>
                   </div>
 
 
