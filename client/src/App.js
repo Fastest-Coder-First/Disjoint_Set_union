@@ -1,6 +1,14 @@
 import React,{useState,useEffect} from 'react'
 import "./App.css"
 import axios from "axios"
+
+import {Chart as ChartJs, Tooltip, Title, ArcElement, Legend} from 'chart.js';
+import { Doughnut } from 'react-chartjs-2';
+ChartJs.register(
+  Tooltip, Title, ArcElement, Legend
+);
+
+
 const App = () => {
   const [status,setStatus]=useState("income")
   const [categoryinc,setCategoryInc]=useState("")
@@ -11,8 +19,179 @@ const App = () => {
 const [recent,setRecent]=useState([])
 const [totalAmountIncome, setTotalAmountIncome] = useState(0);
 const [totalAmountExpense, setTotalAmountExpense] = useState(0);
+const [data, setData] = useState({
+  datasets: [{
+      data: [],
+      backgroundColor:[
+        'red',
+        'blue',
+        'yellow',
+        'green',
+        'browm',
+        'black',
+        'pink',
+        'violet',
+        'orange',
+          'grey',
+      ]
+  },
+],
+labels: [
+  'red',
+  'blue',
+  'yellow',
+  'green',
+  'browm',
+  'black',
+  'pink',
+  'violet',
+  'orange',
+    'grey',
+], 
+});
+const [datac, setDatac] = useState({
+  datasets: [{
+      data: [],
+      backgroundColor:[
+        'red',
+        'blue',
+        'yellow',
+        'green',
+        'browm',
+        'black',
+        'pink',
+        'violet',
+        'orange',
+          'grey',
+      ]
+  },
+],
+labels: [
+  'red',
+  'blue',
+  'yellow',
+  'green',
+  'browm',
+  'black',
+  'pink',
+  'violet',
+  'orange',
+    'grey',
+], 
+});
+const [datainc, setDatainc] = useState({
+  datasets: [{
+      data: [totalAmountIncome,totalAmountExpense],
+      backgroundColor:[
+        'red',
+        'blue',
+        'yellow',
+        'green',
+        'browm',
+        'black',
+        'pink',
+        'violet',
+        'orange',
+          'grey',
+      ]
+  },
+],
+labels: [
+  "income","expenditture"
+], 
+});
+useEffect(()=> {
+  const fetchData = async() =>  {
 
-//////////////
+ try {
+      const resd=await axios.get('http://localhost:8000/api/Transactions/aggregate')
+const res=resd.data;
+      console.log("resss", res)
+      const label = [];
+      const data = [];
+      for(var i of res.expense) {
+          label.push(i.category);
+          data.push(i.totalAmount)
+      }
+      setData(
+        {
+          datasets: [{
+              data:data,
+              backgroundColor:[
+                  'red',
+                  'blue',
+                  'yellow',
+                  'green',
+                  'browm',
+                  'black',
+                  'pink',
+                  'violet',
+                  'orange',
+                    'grey',
+              ]
+          },
+        ],
+        labels:label, 
+      }
+      )
+      const labelc = [];
+      const datac = [];
+      for(var i of res.income) {
+          labelc.push(i.category);
+          datac.push(i.totalAmount)
+      }
+      setDatac(
+        {
+          datasets: [{
+              data:datac,
+              backgroundColor:[
+                  'red',
+                  'blue',
+                  'yellow',
+                  'green',
+                  'browm',
+                  'black',
+                  'pink',
+                  'violet',
+                  'orange',
+                    'grey',
+              ]
+          },
+        ],
+        labels:labelc, 
+      }
+      )
+      setDatainc(
+        {
+          datasets: [{
+              data:[totalAmountIncome,totalAmountExpense],
+              backgroundColor:[
+                  'red',
+                  'blue',
+                  'yellow',
+                  'green',
+                  'browm',
+                  'black',
+                  'pink',
+                  'violet',
+                  'orange',
+                    'grey',
+              ]
+          },
+        ],
+        labels:[
+          "income","expenditture"
+        ], 
+      }
+      )
+      
+    }
+    catch(e) {
+      console.log("error", e)
+    }
+  }
+  fetchData();
+}, [totalAmountExpense,totalAmountIncome])///////////
 
 
 useEffect(() => {
@@ -79,36 +258,45 @@ try{
 
 useEffect(()=>
 {
+  try{
   const getRecent=async()=>{
     const res=await axios.get("http://localhost:8000/api/Transactions/?new=true")
     
     setRecent(res.data)
   }
   getRecent()
+} catch(err){
+  console.log(err)
+}
 },[recent,incomes,expenses])
 
 useEffect(()=>
 {
+  try{
   const getRecent=async()=>{
     const res=await axios.get("http://localhost:8000/api/Transactions/?status=income")
     
     setIncomes(res.data)
   }
   getRecent()
+}catch(err){
+
+}
 },[incomes,recent,expenses])
 
 useEffect(()=>
-{
+{  try{
   const getRecent=async()=>{
     const res=await axios.get("http://localhost:8000/api/Transactions/?status=expense")
     
     setExpenses(res.data)
   }
   getRecent()
+}catch(err){}
 },[incomes,recent,expenses])
 
 const handleDelete=async(id)=>{
-  await axios.delete(`http://localhost:8000/api/Transactions/${id}`)
+  await axios.delete(`http://localhost:8000/api/Transactions/${id}`).then(()=>console.log("De")).catch(err=>console.log)
 }
 
 
@@ -183,9 +371,12 @@ const handleDelete=async(id)=>{
                 }</h1>
             </div>
             </div>
-            <div className="middletab">
-              <div className="expenditurechar">
-                <h1>Expenditure Chart</h1>
+            <div className="middletab" >
+              <div className="expenditurechar" style={{height:'30%',width:'30%'}}>
+                <h1 >Expenditure Chart</h1>
+                <Doughnut data={data}/>
+      <Doughnut data={datac}/>
+      <Doughnut data={datainc}/>
               </div>
               <div className="categorychart">
                 

@@ -90,4 +90,49 @@ router.get('/sumcat/',async(req,res)=>{
   res.status(200).json(sum);
 })
 
+
+router.get("/aggregate",(req,res)=>{
+   // Assuming the Order model is defined in a separate file
+
+async function aggregateAmounts() {
+  try {
+    const aggregatedData = await Product.aggregate([
+      {
+        $group: {
+          _id: {
+            category: "$category",
+            status: "$status"
+          },
+          totalAmount: { $sum: "$amount" }
+        }
+      },
+      {
+        $group: {
+          _id: "$_id.status",
+          categories: {
+            $push: {
+              category: "$_id.category",
+              totalAmount: "$totalAmount"
+            }
+          }
+        }
+      }
+    ]);
+
+    const result = aggregatedData.reduce((acc, { _id, categories }) => {
+      acc[_id] = categories;
+      return acc;
+    }, {});
+
+    console.log(result);
+    res.status(200).json(result)
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+aggregateAmounts();
+
+})
+
 module.exports = router;
