@@ -13,7 +13,7 @@ const App = () => {
   const [status,setStatus]=useState("income")
   const [categoryinc,setCategoryInc]=useState("")
   const [name,setName]=useState("");
-  const [amount,setAmount]=useState(0)
+  const [amount,setAmount]=useState("")
   const [incomes,setIncomes]=useState([])
   const [expenses,setExpenses]=useState([])
 const [recent,setRecent]=useState([])
@@ -182,6 +182,7 @@ const res=resd.data;
         labels:[
           "income","expenditture"
         ], 
+       
       }
       )
       
@@ -306,16 +307,17 @@ const handleDelete=async(id)=>{
   return (
     <div className="fullscreen">
       <div className="left">
-          <input type="text" placeholder="Add Item Name" value={name}onChange={(e)=>setName(e.target.value)}/>
-          <input type="number" placeholder="Add Amount" value={amount} onChange={(e)=>setAmount(e.target.value)} />
+           
+          <input type="text" placeholder="Add Item Name" className="select" value={name}onChange={(e)=>setName(e.target.value)}/>
+          <input type="number" placeholder="Add Amount"  className="select" value={amount} onChange={(e)=>{setAmount(e.target.value);console.log(Number.isInteger(parseInt(amount)))} }/>
           
-          <select name="status" id="status" onChange={(e)=>setStatus(e.target.value)}>
+          <select name="status" id="status"  className="select" onChange={(e)=>setStatus(e.target.value)}>
             <option value="income">Income</option>
             <option value="expense">Expense</option>
             </select>
-           {status==="income" && (
-            <select name="categoryinc" id="categoryinc" onChange={(e)=>setCategoryInc(e.target.value)}>
-              <option value="">Choose</option>
+           {status==="expense" && (
+            <select name="categoryinc"   className="select" id="categoryinc" onChange={(e)=>setCategoryInc(e.target.value)}>
+              <option value="">Choose Category</option>
             <option value="Entertainment">Entertainment</option>
             <option value="Travel">Travel</option>
             <option value="DailyExpense">Daily Expense</option>
@@ -326,9 +328,9 @@ const handleDelete=async(id)=>{
            )}
 
 
-             {status==="expense" && (
-            <select name="categoryinc" id="categoryinc" onChange={(e)=>setCategoryInc(e.target.value)}>
-              <option value="">Choose</option>
+             {status==="income" && (
+            <select name="categoryinc"  className="select" id="categoryinc" onChange={(e)=>setCategoryInc(e.target.value)}>
+              <option value="">Choose Category</option>
             <option value="Job">Job</option>
             <option value="FreeLance">Freelance</option>
             <option value="PocketMoney">PocketMoney</option>
@@ -341,7 +343,7 @@ const handleDelete=async(id)=>{
 
        {
 
-        name!=="" && amount!==0 && categoryinc!=="" && status!=="" && (
+        name!=="" && amount!=="" &&  categoryinc!=="" && status!=="" && (
 
           <div>
 
@@ -357,76 +359,126 @@ const handleDelete=async(id)=>{
       <div className="middle">
 
             <div className="toptab">
-              <div className="income">
-                <h1>Income:{totalAmountIncome}</h1>
-              </div>
             <div className="expense">
-              <h1>Expense:{totalAmountExpense}</h1>
+              <h1>Expense: Rs {totalAmountExpense}</h1>
             </div>
+              <div className="income">
+                <h1>Income:Rs {totalAmountIncome}</h1>
+              </div>
+            
             <div className="savings">
               <h1>{
-                totalAmountIncome-totalAmountExpense < 0 ? <div>LOSS</div>
-               :<div>Savings</div>
+                totalAmountIncome-totalAmountExpense < 0 ? <div style={{color:'red'}}>LOSS : Rs {totalAmountExpense-totalAmountIncome} </div>
+               :<div style={{color:'green'}}>Savings : Rs { totalAmountIncome-totalAmountExpense}</div>
                 
                 }</h1>
             </div>
             </div>
             <div className="middletab" >
-              <div className="expenditurechar" style={{height:'30%',width:'30%'}}>
+              <div className="expense" >
                 <h1 >Expenditure Chart</h1>
                 <Doughnut data={data}/>
-      <Doughnut data={datac}/>
-      <Doughnut data={datainc}/>
+      
+     
               </div>
-              <div className="categorychart">
+              <div className="income">
+              <h1>Income Chart</h1>
+              <Doughnut data={datac}/>
                 
-                <h1>CategoryChart</h1>
+               
               </div>
+              <div className="savings">
+              <h1>Expense vs Income</h1>
+              <Doughnut data={datainc}/>
+                
+               
+              </div>
+
 
             </div>
 
           <div className="bottomtab">
             <div className="categoryexpensedetails">
-             <h1>CategoryExpenseDetails
-             </h1>
+              <h2>Last 5 Transaction History </h2>
+            <div className="new">
+            { recent.map((item)=>{
+              return (<div>
+                
+                <div className="recent">
+                   <div className="recentname">
+                   {item.name}
+                   </div>
+                   <div className="amount">
+                    Rs {item.amount}
+                   </div>
+                   <div className="date">
+                    {item.createdAt.slice(0,10)}
+                   </div>
+                  {item.status}</div>
+
+
+              </div>)
+            })}
+
+          </div>
             </div>
           </div>
 
       </div>
         <div className="right">
-          <div className="top">
+
+          <h1 className="categoryexpensedetails">Income</h1>
           <div className="incomes">
             
           { incomes.map((item)=>{
-              return (<div>
+              return (<div className="division">  
                 
-                <button onClick={()=>handleDelete(item._id)} >{item.name},{item.status}</button>
+                <div  ><div className="recentnames">
+                
+                   {item.name}
+                   </div>
+                   <div className="amounts">
+                     Rs {item.amount}
+                   </div>
+                   <div className="amounts">
+                    {item.category}
+                   </div>
+                   <div className="dates">
+                    {item.createdAt.slice(0,10)}
+                   </div>
+                   <div   className="delete" onClick={()=>handleDelete(item._id)} >Delete</div>
+                  </div>
 
 
               </div>)
             })}
           </div>
+          <h1 className="categoryexpensedetails">Expenses</h1>
           <div className="expenses">
           { expenses.map((item)=>{
-              return (<div>
+              return (<div className="division">
+               <div ><div className="recentnames">
                 
-                <button  onClick={()=>handleDelete(item._id)}>{item.name},{item.status}</button>
+                   {item.name}
+                   </div>
+                   <div className="amounts">
+                   Rs {item.amount}
+                   </div>
+                   <div className="amounts">
+                    {item.category}
+                   </div>
+                   <div className="dates">
+                    {item.createdAt.slice(0,10)}
+                   </div>
+                   <div  className="delete"onClick={()=>handleDelete(item._id)} >Delete</div>
+                  </div>
+
 
               </div>)
             })}
            </div>
-          </div>
-          <div className="new">
-            { recent.map((item)=>{
-              return (<div>
-                
-                <button  onClick={()=>handleDelete(item._id)} >{item.name},{item.status}</button>
-
-
-              </div>)
-            })}
-
-          </div>
+          
+         
 
 
             
