@@ -5,6 +5,7 @@ const OrderSchema = new mongoose.Schema(
   
     name:{type:String,required:true},
     amount: { type: Number, required: true },
+    category:{type:String,required:true},
 
     //status : "income" || "expense"
     status: { type: String,required: true},

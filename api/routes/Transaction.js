@@ -24,9 +24,11 @@ router.post("/",  async (req, res) => {
   
 //recent new products of 5  ?new=true 
 //?status=income ||?status =expense
+//?category=food ||?category =salary
   router.get("/", async (req, res) => {
     const qNew = req.query.new;
     const qCategory = req.query.status;
+    const qCategoryType = req.query.category;
    
     try {
       let products;
@@ -36,6 +38,10 @@ router.post("/",  async (req, res) => {
       } else if (qCategory) {
         products = await Product.find({
           status:qCategory
+        });
+      } else if(qCategoryType){
+        products = await Product.find({
+          category:qCategoryType
         });
       } else {
         products = await Product.find();
@@ -48,12 +54,30 @@ router.post("/",  async (req, res) => {
   });
   
   //?status=income ||?status =expense
-router.get('/sum/',async(req,res)=>{
+router.get('/sumexin/',async(req,res)=>{
   const qCategory = req.query.status;
  const sum= await Product.aggregate([
     {
       $match: {
-        status: qCategory
+      status: qCategory
+      }
+    },
+    {
+      $group: {
+        _id: null,
+        totalAmount: { $sum: "$amount" }
+      }
+    }
+  ])
+  res.status(200).json(sum);
+})
+
+router.get('/sumcat/',async(req,res)=>{
+  const qCategory = req.query.category;
+ const sum= await Product.aggregate([
+    {
+      $match: {
+        category: qCategory
       }
     },
     {
