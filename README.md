@@ -1,7 +1,6 @@
 # Disjoint_Set_union
 A Full Stack MERN Finance Tracker App ,with CRUD facilities and Chartjs to show the expenditure.
-![image](https://github.com/Fastest-Coder-First/Disjoint_Set_union/assets/90182231/75eeb80e-b51e-4aec-8362-bb43497de224)
-![image](https://github.com/Fastest-Coder-First/Disjoint_Set_union/assets/90182231/75eeb80e-b51e-4aec-8362-bb43497de224)
+![image](https://github.com/Fastest-Coder-First/Disjoint_Set_union/assets/90182231/7aa2b233-98a6-496f-a5c5-5fb2beedd482)
 
-update popup
-![image](https://github.com/Fastest-Coder-First/Disjoint_Set_union/assets/90182231/ffb8416a-b0f4-4294-8b5d-8c93e3743401)
+![image](https://github.com/Fastest-Coder-First/Disjoint_Set_union/assets/90182231/5cac6730-4ac9-4ccf-aadd-a262fc5fa9e4)
+
